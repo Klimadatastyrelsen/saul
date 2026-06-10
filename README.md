@@ -11,7 +11,7 @@ You can use these as building blocks for your own web application that wants to 
 npm i --save @dataforsyningen/saul
 ```
 
-2. Create a configuration file or Javascript object with proper values and make sure to load it into your application before using any of the SAUL utilities. This package ships with an example configuration file at `/example/config.js.example`
+2. Create a configuration file or Javascript object with proper values and make sure to load it into your application before using any of the SAUL utilities. This package ships with an example configuration file at [`config.js.example`](config.js.example)
 
 ## How to use
 
