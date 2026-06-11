@@ -15,7 +15,7 @@ function calcSizeRatio(sizeX, bbox) {
 
 /** Fetches a GeoTIFF with elevation data matching the bounding box of a STAC API item (image)
  * @param {object} stac_item - STAC API item from a featureCollection request
- * @param {{API_DHM_WCS_BASEURL: string, API_DHM_TOKENA: string, API_DHM_TOKENB: string}} auth - API autentication data. See ../config.js.example for reference.
+ * @param {{API_DHM_WCS_BASEURL: string, API_DHM_KEY: string}} auth - API autentication data. See ../config.js.example for reference.
  * @param {number} [resolution] - Resolution (1 - 0.01). Higher number means more pixels and better precision.
  * @returns {object} GeoTiff data
  */
@@ -164,7 +164,7 @@ async function getZ(xcoor, ycoor, auth) {
 
 /** Fetches a GeoTIFF with elevation data matching a bounding box of EPSG:25832 coordinates
  * @param {Array} bbox - Bounding box array consisting of two sets of EPSG:25832 coordinates (ie. `[543049, 6153925, 544463, 6155221]`)
- * @param {{API_DHM_WCS_BASEURL: string, API_DHM_TOKENA: string, API_DHM_TOKENB: string}} auth - API autentication data. See ../config.js.example for reference.
+ * @param {{API_DHM_WCS_BASEURL: string, API_DHM_KEY: string}} auth - API autentication data. See ../config.js.example for reference.
  * @param {number} [sizeLimit] - Optional size limiter. Will request GeoTIFF with width that does not exceed this number. Default is 500
  * @returns {object} GeoTiff data
  */
@@ -176,7 +176,7 @@ function getTerrainByBbox(bbox, auth, sizeLimit = 500) {
   // GET request for DHM WCS data
   let url = auth.API_DHM_WCS_BASEURL
   url += '?SERVICE=WCS&COVERAGE=dhm_terraen&RESPONSE_CRS=epsg:25832&CRS=epsg:25832&FORMAT=GTiff&REQUEST=GetCoverage&VERSION=1.0.0'
-  url += `&username=${ auth.API_DHM_TOKENA }&password=${ auth.API_DHM_TOKENB }`
+  url += `&apikey=${ auth.API_DHM_KEY }`
   url += `&height=${ height }`
   url += `&width=${ width }`
   url += `&bbox=${ Math.round(bbox[0]) - 200 },${ Math.round(bbox[1]) - 200 },${ Math.round(bbox[2]) + 200},${ Math.round(bbox[3]) + 200}` // Add/subtract 200 meters to bbox to ensure coverage on the edges
