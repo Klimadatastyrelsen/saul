@@ -1,0 +1,8 @@
+services:
+  saul:
+    build: .
+    volumes:
+      - .:/saul  # Local source of Saul library
+      - /saul/node_modules  # Do not mount over node_modules
+    environment:
+      - NODE_ENV=development
