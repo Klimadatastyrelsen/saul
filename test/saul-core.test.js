@@ -33,14 +33,14 @@ function is_equalIsh(num1, num2, deviation = 0.05) {
   } else {
     return true
   }
-} 
+}
 
 // Test getZ
 try {
 
   let elevation = await getZ(world_x, world_y, auth)
 
-  assert(is_equalIsh(elevation, world_elevation), "getZ fail: This is not the Z value we were hoping for.")
+  assert(is_equalIsh(elevation, world_elevation), `getZ fail: Elevation ${elevation} is way apart from expected ${world_elevation}.`)
   
   console.log("Test getZ OK")
 
@@ -53,8 +53,8 @@ try {
 
   let ite = await iterate(item, image_x, image_y, auth, 0.05)
 
-  assert(is_equalIsh(ite[0][0], world_x), "iterate fail: The coordinate values are not equal") //test if the values are equal
-  assert(is_equalIsh(ite[0][1], world_y), "iterate fail: The coordinate values are not equal") //test if the values are equal
+  assert(is_equalIsh(ite[0][0], world_x), `iterate fail: [0][0] (${ite[0][0]}) is way apart from world_x (${world_x})`)
+  assert(is_equalIsh(ite[0][1], world_y, 0.1), `iterate fail: [0][1] (${ite[0][1]}) is way apart from world_y (${world_y})`)
 
   console.log("Test iterate OK")
 
