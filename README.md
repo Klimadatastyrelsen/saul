@@ -39,6 +39,11 @@ From within `node_modules/@dataforsyningen/saul` you can run the `test` command 
 npm run test
 ```
 
+Or if you have Docker, you may run the test in a container:
+```shell
+docker compose run --rm saul
+```
+
 ## Updating local terrain model
 
 The Saul package includes a terrain elevation model hosted as a single GeoTiff file for events where terrain data from Datafordeler service is unavailable. To update the terrain model, simply download a new GeoTiff from Datafordeler with the following URL (supply your own username/password) and save it to `/assets/dk-terrain.tiff` in the package directory.

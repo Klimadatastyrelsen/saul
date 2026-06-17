@@ -6,3 +6,5 @@ services:
       - /saul/node_modules  # Do not mount over node_modules
     environment:
       - NODE_ENV=development
+    deploy:
+      mode: replicated_job
