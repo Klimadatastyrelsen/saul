@@ -84,7 +84,7 @@ function HttpResponseHandler(response, is_json) {
  * @param {string} url - API service URL, including endpoint paths and query parameters.
  * @param {object} [config] - Custom request configs. See https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#supplying_request_options
  * @param {boolean} [is_json] - `true` if requested output is JSON
- * @returns {object} response object
+ * @returns {Promise} A Promise with the response object or response JSON body
  */
 function get(url, config = {}, is_json = true) {
   if (!url) {
@@ -154,9 +154,21 @@ function post(url, requestbody, token) {
  * API method to fetch data from DHM
  * @param {string} query - DHM API query. Find details at https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/
  * @param {{API_DHM_BASEURL: string, API_DHM_TOKENA: string, API_DHM_TOKENB: string}} auth - API autentication data. See ../config.js.example for reference.
- * @returns {object} Response data
+ * @returns {Promise} A Promise with the response object
  */
 function getDHM(query, auth) {
+  const auth_params = `&username=${auth.API_DHM_TOKENA}&password=${auth.API_DHM_TOKENB}`
+  return get(encodeURI(auth.API_DHM_BASEURL + query + auth_params), {cache: 'force-cache'})
+  .then((data) => data)
+}
+
+/** 
+ * API method to fetch data from DHM
+ * @param {string} query - DHM API query. Find details at https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/
+ * @param {{API_DHM_BASEURL: string, API_DHM_TOKENA: string, API_DHM_TOKENB: string}} auth - API autentication data. See ../config.js.example for reference.
+ * @returns {object} A Promise with response JSON data
+ */
+function OLDgetDHM(query, auth) {
   const auth_params = `&username=${auth.API_DHM_TOKENA}&password=${auth.API_DHM_TOKENB}`
   return get(encodeURI(auth.API_DHM_BASEURL + query + auth_params), {cache: 'force-cache'})
   .then((data) => data)
@@ -191,5 +203,6 @@ export {
   post,
   getSTAC,
   postSTAC,
-  getDHM
+  getDHM,
+  OLDgetDHM
 }
