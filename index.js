@@ -14,6 +14,7 @@ export {
   getElevation,
   visualizeGeotiff,
   getZ,
+  OLDgetZ,
   getTerrainGeoTIFF,
   getDenmarkGeoTiff,
   getTerrainByBbox,

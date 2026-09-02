@@ -3,7 +3,7 @@
 import auth from '../config.js'
 
 import assert from 'assert'
-import { getElevation, get, getTerrainGeoTIFF, getZ, getWorldXYZ, world2image, getTerrainByBbox } from '../index.js'
+import { getElevation, get, getTerrainGeoTIFF, getZ, OLDgetZ, getWorldXYZ, world2image, getTerrainByBbox } from '../index.js'
 
 console.log('---------------')
 console.log('Elevation tests')
@@ -71,6 +71,14 @@ function compareElevations(x,y,geotiff) {
     .then(getz_e => {
       assert(is_equalIsh(getz_e, elevation, 2.7), `Elevations ${elevation} / ${getz_e} at ${x} ${y} are way apart`)
       console.log(`Elevation at ${ x } ${ y } with delta ${Math.abs(elevation - getz_e).toFixed(2)} OK`)
+    })
+  })
+  getZ(x, y, auth)
+  .then(getz_e => {
+    OLDgetZ(x, y, auth)
+    .then(OLDgetz_e => {
+      assert(is_equalIsh(OLDgetz_e, getz_e, 0), `New/old elevations ${getz_e} / ${OLDgetz_e} at ${x} ${y} are way apart`)
+      console.log(`New/old elevation at ${ x } ${ y } with delta ${Math.abs(getz_e - OLDgetz_e).toFixed(2)} OK`)
     })
   })
 }
