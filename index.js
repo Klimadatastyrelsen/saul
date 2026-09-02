@@ -1,11 +1,8 @@
 // Import/export modules with their public methods
 
 export {
-  postSTAC,
   getSTAC,
-  getDHM,
-  get,
-  post
+  get
 } from './modules/api.js'
 
 export {
