@@ -156,15 +156,17 @@ function post(url, requestbody, token) {
 }
 
 /**
- * API method to fetch data from DHM
- * @param {string} query DHM API query. Find details at https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/
- * @param {{API_DHM_BASEURL: string, API_DHM_TOKENA: string, API_DHM_TOKENB: string}} auth API autentication data. See ../config.js.example for reference.
- * @returns {Promise<object>} Eventually the response body JSON structure
+ * Fetch data from DHM
+ * @param {string} query DHM API query. Find details at https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/dhm-wms/
+ * @param {object} auth API autentication data. See ../config.js.example for reference.
+ * @param {string} auth.API_DHM_WMS_BASEURL The base URL of the DHM WMS endpoint.
+ * @param {string} auth.API_DHM_KEY Your API key to access services on Datafordeler.
+ * @returns {Promise.<string>} Eventually the response body text.
  */
-async function getDHM(query, auth) {
-  const auth_params = `&username=${auth.API_DHM_TOKENA}&password=${auth.API_DHM_TOKENB}`
-  const data = await get(encodeURI(auth.API_DHM_BASEURL + query + auth_params), { cache: 'force-cache' })
-  return data
+function getDHM(query, auth) {
+  const auth_params = `&apikey=${encodeURIComponent(auth.API_DHM_KEY)}`
+  return get(auth.API_DHM_WMS_BASEURL + '?SERVICE=WMS&VERSION=1.3.0' + query + auth_params, { cache: 'force-cache' }, false)
+    .then((response) => response.text())
 }
 
 /** 

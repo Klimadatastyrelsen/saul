@@ -150,16 +150,56 @@ function zeroPadNumber(input) {
 }
 
 /**
+ * Exception thrown, when the response from DHM cannot be parsed.
+ * @extends Error
+ * @property {string} [response] The given response text from DHM.
+ * @property {RexExp} [pattern] The given pattern used to parse the response text.
+ */
+class DHMParseError extends Error {
+  /**
+   * Create a parse exception. All arguments are forwarded to Error.
+   * @param {string} message Description of exception.
+   * @param {object} [options] Standard options parameter to Error, may contain a cause, see Error.
+   * @param {string} [options.response] Response text from DHM, that could not be parsed with pattern.
+   * @param {RegExp} [options.pattern] The pattern, that did not parse the Response text well.
+   */
+  constructor(...params) {
+    super(...params);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, DHMParseError);
+    }
+    this.name = "DHMParseError";
+    if (params.length > 1 && typeof params[1] == 'object') {
+      if (params[1].response)
+        this.response = params[1].response;
+      if (params[1].pattern)
+        this.pattern = params[1].pattern;
+    }
+  }
+}
+
+/**
  * Fetches a single elevation value based on X,Y coordinates using DHM/Koter endpoint.
  * @param {number} xcoor EPSG:25832 X coordinate.
  * @param {number} ycoor EPSG:25832 Y coordinate.
- * @param {{API_DHM_BASEURL: string, API_DHM_USERNAME: string, API_DHM_PASSWORD: string}} auth API autentication data. See ../config.js.example for reference.
- * @returns {Promise<number>} Eventually the elevation in meters. 
+ * @param {object} auth API autentication data. See ../config.js.example for reference.
+ * @param {string} auth.API_DHM_WMS_BASEURL The base URL of the DHM WMS endpoint.
+ * @param {string} auth.API_DHM_KEY Your API key to access services on Datafordeler.
+ * @returns {number} Eventually returns the elevation in meters.
+ * @throws {DHMParseError} When unable to parse response from DHM WMS.
  */
 async function getZ(xcoor, ycoor, auth) {
-  let zcoor_data = await getDHM(`?geop=POINT(${xcoor} ${ycoor})&elevationmodel=dtm`, auth)
-  let z = zcoor_data.HentKoterRespons.data[0].kote
-  return z
+  const request = '&request=GetFeatureInfo&styles=&layers=dhm_terraen&query_layers=dhm_terraen&info_format=text/plain&i=175&j=175&width=351&height=351'
+  const bbox = [xcoor - 1, ycoor - 1, xcoor + 1, ycoor + 1]
+  const coords = '&crs=EPSG:25832&bbox=' + encodeURIComponent(bbox.join())
+  const dhm_text = await getDHM(request + coords, auth)
+  const text_begin = /GetFeatureInfo\s+results:\s*Layer\s+'dhm_terraen'\s+Feature\s*0:\s*value_0\s*=\s*'/y
+  if (text_begin.test(dhm_text)) {
+    const z = parseFloat(dhm_text.slice(text_begin.lastIndex))
+    if (z) return z
+    throw new DHMParseError('Cannot parse float value in response text from DHM GetFeatureInfo after pattern.', { response: dhm_text, pattern: text_begin })
+  }
+  throw new DHMParseError('Cannot match response text from DHM GetFeatureInfo with pattern.', { response: dhm_text, pattern: text_begin })
 }
 
 /** 
@@ -210,6 +250,7 @@ export {
   getElevation,
   visualizeGeotiff,
   getZ,
+  DHMParseError,
   OLDgetZ,
   getTerrainGeoTIFF,
   getDenmarkGeoTiff,
