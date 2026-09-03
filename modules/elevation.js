@@ -149,12 +149,12 @@ function zeroPadNumber(input) {
   }
 }
 
-/** 
- * Fetches a single elevation value based on X,Y coordinates using DHM/Koter endpoint
- * @param {number} xcoor - EPSG:25832 X coordinate
- * @param {number} ycoor - EPSG:25832 Y coordinate
- * @param {{API_DHM_BASEURL: string, API_DHM_USERNAME: string, API_DHM_PASSWORD: string}} auth - API autentication data. See ../config.js.example for reference.
- * @returns {number} Elevation in meters 
+/**
+ * Fetches a single elevation value based on X,Y coordinates using DHM/Koter endpoint.
+ * @param {number} xcoor EPSG:25832 X coordinate.
+ * @param {number} ycoor EPSG:25832 Y coordinate.
+ * @param {{API_DHM_BASEURL: string, API_DHM_USERNAME: string, API_DHM_PASSWORD: string}} auth API autentication data. See ../config.js.example for reference.
+ * @returns {Promise<number>} Eventually the elevation in meters. 
  */
 async function getZ(xcoor, ycoor, auth) {
   let zcoor_data = await getDHM(`?geop=POINT(${xcoor} ${ycoor})&elevationmodel=dtm`, auth)
