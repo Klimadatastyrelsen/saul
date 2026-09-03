@@ -14,6 +14,7 @@ export {
   getElevation,
   visualizeGeotiff,
   getZ,
+  DHMParseError,
   OLDgetZ,
   getTerrainGeoTIFF,
   getDenmarkGeoTiff,
