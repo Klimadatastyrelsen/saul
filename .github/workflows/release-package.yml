@@ -30,4 +30,4 @@ jobs:
         with:
           node-version: 26
           registry-url: https://registry.npmjs.org
-      - run: npm stage publish --access public
+      - run: npm stage publish --access public --tag pre-release
