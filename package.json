@@ -1,6 +1,6 @@
 {
   "name": "@dataforsyningen/saul",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "This is a collection of stand-alone methods for photogrammetry calculations and API interactions for 'Danske Skråfotos'.",
   "main": "index.js",
   "type": "module",
@@ -10,23 +10,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SDFIdk/saul.git"
+    "url": "git+https://github.com/Klimadatastyrelsen/saul.git"
   },
   "keywords": [
     "skråfoto",
-    "SDFI",
+    "SDFI", "KDS",
     "saul"
   ],
   "author": {
-    "name": "Styrelsen for Dataforsyning og Infrastruktur",
-    "email": "support@sdfi.dk",
-    "url": "https://sdfi.dk/"
+    "name": "Klimadatastyrelsen",
+    "email": "support@kds.dk",
+    "url": "https://kds.dk/"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SDFIdk/saul/issues"
+    "url": "https://github.com/Klimadatastyrelsen/saul/issues"
   },
-  "homepage": "https://github.com/SDFIdk/saul#readme",
+  "homepage": "https://github.com/Klimadatastyrelsen/saul#readme",
   "devDependencies": {
     "jsdoc": "^4.0.2"
   },
