@@ -4,11 +4,10 @@ export default {
   API_STAC_TOKEN: "", // Dataforsyningen token
   API_STAC_BASEURL: "https://api.dataforsyningen.dk/rest/skraafoto_api/v2",
 
-  // DHM URL and auth can be aquired from https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/
+  // DHM WCS URL can be aquired from https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/dhm-wcs/
   API_DHM_WCS_BASEURL: "https://wcs.datafordeler.dk/DHMNedboer/dhm_wcs/1.0.0/WCS",
+  // DHM WMS URL can be aquired from https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/dhm-wms/
   API_DHM_WMS_BASEURL: "https://wms.datafordeler.dk/DHMNedboer/dhm/1.0.0/WMS",
+  // DHM auth is described at https://confluence.kds.dk/pages/viewpage.action?pageId=187105503#Autentifikationsmetoderp%C3%A5DatafordelerAdministration-API-Key
   API_DHM_KEY: "", // DHM API service key
-  API_DHM_BASEURL: "https://services.datafordeler.dk/DHMTerraen/DHMKoter/1.0.0/GEOREST/HentKoter",
-  API_DHM_TOKENA: "", // DHM API service username
-  API_DHM_TOKENB: "" // DHM API service password
 }
