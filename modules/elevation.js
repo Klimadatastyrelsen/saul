@@ -1,4 +1,4 @@
-import { getDHM, OLDgetDHM, get } from './api.js'
+import { getDHM, get } from './api.js'
 import { fromArrayBuffer } from 'geotiff'
 
 /** Converts raw GeoTIFF arrayBuffer to image */
@@ -202,19 +202,6 @@ async function getZ(xcoor, ycoor, auth) {
   throw new DHMParseError('Cannot match response text from DHM GetFeatureInfo with pattern.', { response: dhm_text, pattern: text_begin })
 }
 
-/** 
- * Fetches a single elevation value based on X,Y coordinates using DHM/Koter endpoint
- * @param {number} xcoor - EPSG:25832 X coordinate
- * @param {number} ycoor - EPSG:25832 Y coordinate
- * @param {{API_DHM_BASEURL: string, API_DHM_USERNAME: string, API_DHM_PASSWORD: string}} auth - API autentication data. See ../config.js.example for reference.
- * @returns {number} Elevation in meters 
- */
-async function OLDgetZ(xcoor, ycoor, auth) {
-  let zcoor_data = await OLDgetDHM(`?geop=POINT(${xcoor} ${ycoor})&elevationmodel=dtm`, auth)
-  let z = zcoor_data.HentKoterRespons.data[0].kote
-  return z
-}
-
 /** Fetches a GeoTIFF with elevation data matching a bounding box of EPSG:25832 coordinates
  * @param {Array} bbox - Bounding box array consisting of two sets of EPSG:25832 coordinates (ie. `[543049, 6153925, 544463, 6155221]`)
  * @param {{API_DHM_WCS_BASEURL: string, API_DHM_KEY: string}} auth - API autentication data. See ../config.js.example for reference.
@@ -251,7 +238,6 @@ export {
   visualizeGeotiff,
   getZ,
   DHMParseError,
-  OLDgetZ,
   getTerrainGeoTIFF,
   getDenmarkGeoTiff,
   getTerrainByBbox,
