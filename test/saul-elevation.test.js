@@ -3,7 +3,7 @@
 import auth from '../config.js'
 
 import { Assert } from './assert.js'
-import { getElevation, get, getTerrainGeoTIFF, getZ, OLDgetZ, getWorldXYZ, world2image, getTerrainByBbox } from '../index.js'
+import { getElevation, get, getTerrainGeoTIFF, getZ, getWorldXYZ, world2image, getTerrainByBbox } from '../index.js'
 
 const assert = new Assert()
 
@@ -66,15 +66,6 @@ function compareElevations(x,y,geotiff) {
     )
   )
   .then(delta => console.log(`Elevation deviation ${delta.toFixed(2)} at (${x}, ${y}) OK`))
-  .catch(console.error)
-  getZ(x, y, auth)
-  .then(getz_e =>
-    OLDgetZ(x, y, auth)
-    .then(OLDgetz_e =>
-      assert.almostEqual(getz_e, OLDgetz_e, 0, `New/old elevations at (${x}, ${y}) are way apart`)
-    )
-  )
-  .then(delta => console.log(`New/old elevation deviation ${delta.toFixed(2)} at (${x}, ${y}) OK`))
   .catch(console.error)
 }
 

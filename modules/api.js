@@ -170,18 +170,6 @@ function getDHM(query, auth) {
 }
 
 /** 
- * API method to fetch data from DHM
- * @param {string} query - DHM API query. Find details at https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-dhm/koter/
- * @param {{API_DHM_BASEURL: string, API_DHM_TOKENA: string, API_DHM_TOKENB: string}} auth - API autentication data. See ../config.js.example for reference.
- * @returns {object} A Promise with response JSON data
- */
-function OLDgetDHM(query, auth) {
-  const auth_params = `&username=${auth.API_DHM_TOKENA}&password=${auth.API_DHM_TOKENB}`
-  return get(encodeURI(auth.API_DHM_BASEURL + query + auth_params), {cache: 'force-cache'})
-  .then((data) => data)
-}
-
-/** 
  * API method to GET data from STAC API
  * @param {string} query - STAC API query string. May include endpoint path information.
  * @param {{API_STAC_BASEURL: string, API_STAC_TOKEN: string}} auth - API autentication data. See ../config.js.example for reference.
@@ -210,6 +198,5 @@ export {
   post,
   getSTAC,
   postSTAC,
-  getDHM,
-  OLDgetDHM
+  getDHM
 }

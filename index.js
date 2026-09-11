@@ -15,7 +15,6 @@ export {
   visualizeGeotiff,
   getZ,
   DHMParseError,
-  OLDgetZ,
   getTerrainGeoTIFF,
   getDenmarkGeoTiff,
   getTerrainByBbox,
