@@ -142,10 +142,6 @@ function iterateRecursive(image_data, col, row, z, count, limit, auth, i) {
   const worldcoor = image2world(image_data,col,row,z)
 
   i--
-  if (i <= 0) {
-    // max iterations reached
-    return [worldcoor, 0, count]
-  }
 
   // Get new z value from coordinates
   return getZ(worldcoor[0],worldcoor[1], auth).then((new_z) => {
@@ -153,13 +149,12 @@ function iterateRecursive(image_data, col, row, z, count, limit, auth, i) {
     // How big is the different between z and new z?
     const delta = Math.abs(new_z - z)
     
-    if (delta >= limit) {
-      // If the difference is too big, try building coordinates with the new z
-      count = count + 1
-      return iterateRecursive(image_data, col, row, new_z, count, limit, auth, i)
-    } else {
-      // If the difference is small, return coordinates
+    if (delta < limit || i <= 0) {
+      // If the difference is small or max iterations reached, return coordinates
       return [worldcoor, delta, count]
+    } else {
+      // If the difference is too big, try building coordinates with the new z
+      return iterateRecursive(image_data, col, row, new_z, count + 1, limit, auth, i)
     }
   })
 }
