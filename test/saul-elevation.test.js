@@ -2,8 +2,10 @@
 // Check config.js.example for info on how to set it up
 import auth from '../config.js'
 
-import assert from 'assert'
+import { Assert } from './assert.js'
 import { getElevation, get, getTerrainGeoTIFF, getZ, OLDgetZ, getWorldXYZ, world2image, getTerrainByBbox } from '../index.js'
+
+const assert = new Assert()
 
 console.log('---------------')
 console.log('Elevation tests')
@@ -12,19 +14,10 @@ console.log('---------------')
 // Vars
 const stac_item = '2021_83_29_2_0019_00003995'
 const fidelity = 0.03 // Higher number means more points and better precision
-const max_deviation = 0.5
 
 // STAC API endpoint
 let url_stac = auth.API_STAC_BASEURL + '/search?limit=1&crs=http://www.opengis.net/def/crs/EPSG/0/25832&token=9b554b6c854184c3b0f377ffc7481585'
 url_stac += `&ids=${ stac_item }`
-
-function is_equalIsh(num1, num2, deviation = max_deviation) {
-  if (Math.abs(num1 - num2) > deviation) {
-    return false
-  } else {
-    return true
-  }
-}
 
 function getRandomCoordinate(bbox) {
   const x = bbox[0] + Math.random() * (bbox[2] - bbox[0])
@@ -57,30 +50,32 @@ function testGetWorldXYZAnumberOfTimes(item, terrain, times) {
     }).then(world_xy => {
       compareElevations(world_xy[0], world_xy[1], terrain)
       const image_coords = world2image(item, world_xy[0], world_xy[1], world_xy[2])
-      assert(is_equalIsh(image_coords[0], xy[0], 2), `Image x coordinates ${image_coords[0]} / ${xy[0]} do not match`)
-      assert(is_equalIsh(image_coords[1], xy[1], 2), `Image y coordinates ${image_coords[1]} / ${xy[1]} do not match`)
+      assert.almostEqual(image_coords, xy, 2, `Image coordinates ${image_coords} / ${xy} do not match`)
       console.log('getWorldXYZ => world2image OK')
     })
+    .catch(console.error)
   }
 }
 
 function compareElevations(x,y,geotiff) {
   getElevation(x, y, geotiff)
-  .then(elevation => {
+  .then(elevation =>
     getZ(x, y, auth)
-    .then(getz_e => {
-      assert(is_equalIsh(getz_e, elevation, 2.7), `Elevations ${elevation} / ${getz_e} at ${x} ${y} are way apart`)
-      console.log(`Elevation at ${ x } ${ y } with delta ${Math.abs(elevation - getz_e).toFixed(2)} OK`)
-    })
-  })
+    .then(getz_e =>
+      assert.almostEqual(getz_e, elevation, 2.7, `Deviant elevation at (${x}, ${y}):`)
+    )
+  )
+  .then(delta => console.log(`Elevation deviation ${delta.toFixed(2)} at (${x}, ${y}) OK`))
+  .catch(console.error)
   getZ(x, y, auth)
-  .then(getz_e => {
+  .then(getz_e =>
     OLDgetZ(x, y, auth)
-    .then(OLDgetz_e => {
-      assert(is_equalIsh(OLDgetz_e, getz_e, 0), `New/old elevations ${getz_e} / ${OLDgetz_e} at ${x} ${y} are way apart`)
-      console.log(`New/old elevation at ${ x } ${ y } with delta ${Math.abs(getz_e - OLDgetz_e).toFixed(2)} OK`)
-    })
-  })
+    .then(OLDgetz_e =>
+      assert.almostEqual(getz_e, OLDgetz_e, 0, `New/old elevations at (${x}, ${y}) are way apart`)
+    )
+  )
+  .then(delta => console.log(`New/old elevation deviation ${delta.toFixed(2)} at (${x}, ${y}) OK`))
+  .catch(console.error)
 }
 
 // Test getTerrainGeoTIFF and getElevation with a STAC API item
@@ -119,7 +114,7 @@ get(url_stac)
 // Testing getTerrainByBbox()
 try {
   const gtiff = await getTerrainByBbox([542929.6729020511, 6153925.479277819, 544463.7189110086, 6155242.76541582], auth)
-  assert(gtiff.fileDirectory.ImageWidth === 500, 'GeoTIFF has weird dimensions')
+  assert.equal(gtiff.fileDirectory.ImageWidth, 500, 'GeoTIFF has weird dimensions')
   console.log('Test getTerrainByBbox() => OK')
 } catch(error) {
   console.error(error)
